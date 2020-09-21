@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   TouchableHighlight,
   StyleSheet,
@@ -16,13 +16,29 @@ import {
   TextInput,
 } from 'react-native';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 const App = () => {
+  const [inputText, saveInputText] = useState('');
+
+  const saveValues = async () => {
+    try {
+      await AsyncStorage.setItem('name', inputText);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <TextInput placeholder="Write your name" style={styles.input} />
+        <TextInput
+          placeholder="Write your name"
+          style={styles.input}
+          onChangeText={(text) => saveInputText(text)}
+        />
 
-        <Button title="Save" color="#333" />
+        <Button onPress={() => saveValues()} title="Save" color="#333" />
 
         <TouchableHighlight style={styles.btnDelete}>
           <Text style={styles.txtDelete}>Delete Name &times;</Text>
